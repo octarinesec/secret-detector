@@ -3,7 +3,7 @@ package npm
 import (
 	"testing"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/detectors/tests"
+	"github.com/octarinesec/secret-detector/pkg/detectors/tests"
 )
 
 var testCases = []tests.TestCase{

@@ -1,11 +1,11 @@
 package yamltransformer
 
 import (
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
 	"gopkg.in/yaml.v3"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/transformers/helpers"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/transformers/helpers"
 )
 
 const (

@@ -2,10 +2,10 @@ package jsontransformer
 
 import (
 	"encoding/json"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/transformers/helpers"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/transformers/helpers"
 )
 
 const (

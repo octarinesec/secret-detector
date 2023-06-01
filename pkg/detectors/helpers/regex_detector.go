@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
 
 type DetectionVerifier func(string) bool

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/scanner"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/scanner"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 	"strings"
 )
 

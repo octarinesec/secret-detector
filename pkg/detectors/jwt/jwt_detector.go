@@ -7,8 +7,8 @@ import (
 
 	jwtparser "github.com/golang-jwt/jwt"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/detectors/helpers"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/detectors/helpers"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
 
 const (

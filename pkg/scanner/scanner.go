@@ -8,8 +8,8 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
 
 const (

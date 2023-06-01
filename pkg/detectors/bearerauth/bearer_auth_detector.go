@@ -1,12 +1,12 @@
 package bearerauth
 
 import (
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/detectors/helpers"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/detectors/helpers"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
 
 const (
-	Name = "bearer_auth"
+	Name       = "bearer_auth"
 	secretType = "HTTP Bearer Authentication"
 
 	// bearerAuthRegex represents a regex that matches HTTP bearer authentication.

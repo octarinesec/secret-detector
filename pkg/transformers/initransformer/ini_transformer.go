@@ -3,12 +3,12 @@ package initransformer
 
 import (
 	"fmt"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
 	"strings"
 
 	"gopkg.in/ini.v1"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
 
 const (

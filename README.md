@@ -9,7 +9,7 @@ It is meant to be imported in other projects and uses as a Secret Detection Engi
 In order to use it in another project, get the go module:
 
 ```shell
-go get gitlab.bit9.local/octarine/detect-secrets
+go get github.com/octarinesec/secret-detector
 ```
 
 Then you can import it in your Go code and use it:
@@ -18,7 +18,7 @@ Then you can import it in your Go code and use it:
 import (
     "fmt"
     "io"
-    "gitlab.bit9.local/octarine/detect-secrets/pkg/scanner"
+    "github.com/octarinesec/secret-detector/pkg/scanner"
 )
 
 func main() {
@@ -73,7 +73,7 @@ For example, `keyword.detector` checks for keywords like `password` or `api_key`
 ## Load Scanner using a config file
 ```go
 import (
-    "gitlab.bit9.local/octarine/detect-secrets/pkg/scanner"
+    "github.com/octarinesec/secret-detector/pkg/scanner"
 )
 
 func main() {

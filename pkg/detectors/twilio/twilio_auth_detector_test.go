@@ -1,7 +1,7 @@
 package twilio
 
 import (
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/detectors/tests"
+	"github.com/octarinesec/secret-detector/pkg/detectors/tests"
 	"testing"
 )
 

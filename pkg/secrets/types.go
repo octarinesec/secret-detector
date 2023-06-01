@@ -1,7 +1,7 @@
 package secrets
 
 import (
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
 	"io"
 )
 

@@ -1,4 +1,4 @@
-module gitlab.bit9.local/octarine/detect-secrets
+module github.com/octarinesec/secret-detector
 
 go 1.18
 

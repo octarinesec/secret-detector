@@ -3,8 +3,8 @@ package command
 import (
 	"fmt"
 	"github.com/mattn/go-shellwords"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 	"strings"
 )
 

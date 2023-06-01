@@ -1,7 +1,7 @@
 package xmltransformer
 
 import (
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/transformers/tests"
+	"github.com/octarinesec/secret-detector/pkg/transformers/tests"
 	"testing"
 )
 

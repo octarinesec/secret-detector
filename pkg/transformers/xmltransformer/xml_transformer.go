@@ -3,10 +3,10 @@ package xmltransformer
 import (
 	"encoding/xml"
 	"fmt"
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/dataformat"
 	"strings"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/secrets"
+	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
 
 const (

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gitlab.bit9.local/octarine/detect-secrets/pkg/detectors/tests"
+	"github.com/octarinesec/secret-detector/pkg/detectors/tests"
 )
 
 var testCases = []tests.TestCase{
