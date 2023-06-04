@@ -126,40 +126,6 @@ func (t *transformer) Transform(in string) (map[string]string, bool) {
 			argMap[key] = value
 		}
 	}
-	hasArgs := false
-	hasFlags := false
-	for k, _ := range argMap {
-		if strings.HasPrefix(k, "arg") {
-			hasArgs = true
-		} else {
-			hasFlags = true
-		}
-	}
-
-	title := ""
-	if hasArgs {
-		if !hasFlags {
-			title = "command with args"
-		} else {
-			title = "command with args and flags"
-		}
-	}
-	if hasFlags && !hasArgs {
-		title = "command with flags"
-	}
-	if !hasFlags && !hasArgs {
-		title = "command without args"
-	}
-
-	str := fmt.Sprintf("{\"%s\", \"%s\", map[string]string{", title, strings.Replace(in, "\"", "\\\"", -1))
-	for k, v := range argMap {
-		str += fmt.Sprintf("\"%s\": \"%s\", ", k, v)
-	}
-	if len(argMap) != 0 {
-		str = str[:len(str)-2]
-	}
-	str += "}},\n"
-	fmt.Printf(str)
 
 	return argMap, true
 }
