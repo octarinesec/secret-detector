@@ -21,7 +21,7 @@ func printScanOutput(ds []secrets.DetectedSecret, err error) {
 func main() {
 	scanner := scanner.NewDefaultScanner()
 
-	command := "docker login --username yourusername --password yourpassword123"
+	command := "RUN /bin/sh -c echo hi --password \"_authToken=a5714101-fdcf-4b46-9202-00070aa84b52\"/ # buildkit"
 	ds, err := scanner.ScanStringWithFormat(command, dataformat.Command)
 	printScanOutput(ds, err)
 

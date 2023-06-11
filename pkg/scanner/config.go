@@ -48,9 +48,10 @@ const (
 // So it's better to order them from most specific to the most general.
 // e.g. GitHub key might also be a high entropy base64 string.
 type Config struct {
-	Transformers     []string `json:"transformers" yaml:"transformers"`
-	Detectors        []string `json:"detectors" yaml:"detectors"`
-	ThresholdInBytes int      `json:"threshold_in_bytes" yaml:"threshold_in_bytes"`
+	Transformers     []string            `json:"transformers" yaml:"transformers"`
+	Detectors        []string            `json:"detectors" yaml:"detectors"`
+	DetectorConfigs  map[string][]string `json:"detectors_configs" yaml:"detectors_configs"`
+	ThresholdInBytes int                 `json:"threshold_in_bytes" yaml:"threshold_in_bytes"`
 }
 
 func NewConfigWithDefaults() Config {
@@ -83,6 +84,10 @@ func NewConfigWithDefaults() Config {
 			twilio.Name,
 			generic.URLPasswordDetectorName,
 			generic.HighEntropyStringDetectorName,
+		},
+		DetectorConfigs: map[string][]string{
+			keyword.Name:                          {"4"},
+			generic.HighEntropyStringDetectorName: {"5"},
 		},
 		ThresholdInBytes: DefaultThreshold,
 	}

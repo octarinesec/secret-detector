@@ -19,7 +19,7 @@ type awsSecretKeyDetector struct {
 	secrets.Detector
 }
 
-func NewSecretKeyDetector() secrets.Detector {
+func NewSecretKeyDetector(config []string) secrets.Detector {
 	return &awsSecretKeyDetector{
 		Detector: helpers.NewRegexDetector(secretKeyDetectorSecretType, awsSecretKeyRegex),
 	}

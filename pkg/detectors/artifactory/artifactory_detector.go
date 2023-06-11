@@ -26,7 +26,7 @@ type detector struct {
 	secrets.Detector
 }
 
-func NewDetector() secrets.Detector {
+func NewDetector(config []string) secrets.Detector {
 	return &detector{
 		Detector: helpers.NewRegexDetector(secretType, artifactoryTokenRegex, artifactoryEncryptedPasswordRegex),
 	}

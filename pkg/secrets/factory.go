@@ -24,21 +24,21 @@ func GetTransformerFactory() TransformerFactory {
 
 func initFactories() {
 	once.Do(func() {
-		detectorsFactory = &detectorFactory{make(map[string]func() Detector)}
+		detectorsFactory = &detectorFactory{make(map[string]func(config []string) Detector)}
 		transformersFactory = &transformerFactory{make(map[string]func() Transformer)}
 	})
 }
 
 type DetectorFactory interface {
-	Register(name string, initMethod func() Detector) error
-	Create(names []string) (detectors []Detector, missing []string)
+	Register(name string, initMethod func(config []string) Detector) error
+	Create(names []string, detectorConfigs map[string][]string) (detectors []Detector, missing []string)
 }
 
 type detectorFactory struct {
-	factoryMethodsMap map[string]func() Detector
+	factoryMethodsMap map[string]func(config []string) Detector
 }
 
-func (f *detectorFactory) Register(name string, initMethod func() Detector) error {
+func (f *detectorFactory) Register(name string, initMethod func(config []string) Detector) error {
 	name = strings.ToLower(name)
 	if _, exist := f.factoryMethodsMap[name]; exist {
 		return fmt.Errorf("detecor '%s' already registered", name)
@@ -48,9 +48,10 @@ func (f *detectorFactory) Register(name string, initMethod func() Detector) erro
 	return nil
 }
 
-func (f *detectorFactory) Create(names []string) (detectors []Detector, missing []string) {
+func (f *detectorFactory) Create(names []string, detectorConfigs map[string][]string) (detectors []Detector, missing []string) {
 	for _, name := range names {
-		d := f.create(name)
+		config := detectorConfigs[name]
+		d := f.create(name, config)
 		if d != nil {
 			detectors = append(detectors, d)
 		} else {
@@ -60,10 +61,10 @@ func (f *detectorFactory) Create(names []string) (detectors []Detector, missing 
 	return
 }
 
-func (f *detectorFactory) create(name string) Detector {
+func (f *detectorFactory) create(name string, config []string) Detector {
 	name = strings.ToLower(name)
 	if factoryMethod, exist := f.factoryMethodsMap[name]; exist {
-		return factoryMethod()
+		return factoryMethod(config)
 	}
 	return nil
 }

@@ -42,13 +42,20 @@ func init() {
 
 type highEntropyStringDetector struct {
 	secrets.Detector
-	hexRegex *regexp.Regexp
+	hexRegex         *regexp.Regexp
+	entropyThreshold float64
 }
 
-func NewHighEntropyStringDetector() secrets.Detector {
+func NewHighEntropyStringDetector(config []string) secrets.Detector {
 	d := &highEntropyStringDetector{}
 	d.hexRegex = regexp.MustCompile(hexExactRegex)
 	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isHighEntropyString, highEntropyStringDetectorSecretType, base64Regex)
+	if config != nil && len(config) > 0 {
+		threshold, err := strconv.ParseFloat(config[0], 64)
+		if err == nil {
+			d.entropyThreshold = threshold
+		}
+	}
 	return d
 }
 
@@ -58,25 +65,31 @@ func (d *highEntropyStringDetector) isHighEntropyString(s string) bool {
 		return false
 	}
 
-	s = strings.TrimRight(s, "=")
-	entropyThreshold := base64EntropyThreshold
-	if d.isHexadecimal(s) {
-		entropyThreshold = hexEntropyThreshold
+	entropyThreshold := 0.0
+	if d.entropyThreshold != 0.0 {
+		entropyThreshold = d.entropyThreshold
+	} else {
+		s = strings.TrimRight(s, "=")
+		entropyThreshold = base64EntropyThreshold
+		if d.isHexadecimal(s) {
+			entropyThreshold = hexEntropyThreshold
+		}
 	}
-	return calcShannonEntropy(s) > entropyThreshold
+
+	return CalcShannonEntropy(s) > entropyThreshold
 }
 
 func (d *highEntropyStringDetector) isHexadecimal(s string) bool {
 	return d.hexRegex.MatchString(s)
 }
 
-// calcShannonEntropy calculates how random a string is.
+// CalcShannonEntropy calculates how random a string is.
 // Minimal possible level is 0, which means that all characters in the string are similar.
 // Maximal possible level is log2(len(s)), which means that all characters in the string are different from one another.
 //
 // Formula: sum( frequency(char) * log2(frequency(char)) )
 // See more https://en.wikipedia.org/wiki/Entropy_(information_theory)
-func calcShannonEntropy(s string) float64 {
+func CalcShannonEntropy(s string) float64 {
 	length := float64(len(s))
 	charCounts := make(map[rune]float64)
 	for _, c := range s {

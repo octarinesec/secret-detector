@@ -26,7 +26,7 @@ type scanner struct {
 
 func NewScannerFromConfig(config Config) (secrets.Scanner, error) {
 	supportedTransformers, missingT := secrets.GetTransformerFactory().Create(config.Transformers)
-	supportedDetectors, missingD := secrets.GetDetectorFactory().Create(config.Detectors)
+	supportedDetectors, missingD := secrets.GetDetectorFactory().Create(config.Detectors, config.DetectorConfigs)
 
 	var err error
 	if len(missingT) > 0 || len(missingD) > 0 {

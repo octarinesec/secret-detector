@@ -26,7 +26,7 @@ type detector struct {
 	jwtParser *jwtparser.Parser
 }
 
-func NewDetector() secrets.Detector {
+func NewDetector(config []string) secrets.Detector {
 	d := &detector{}
 	d.jwtParser = &jwtparser.Parser{}
 	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isTokenValid, secretType, jwtRegex)
@@ -45,7 +45,8 @@ func (d *detector) isTokenValid(token string) bool {
 }
 
 // ensureUnsignedTokenValidity ensures that both header and payload decode to a valid JSON objects,
-//   and header "alg" field is set to "none"
+//
+//	and header "alg" field is set to "none"
 func (d *detector) ensureUnsignedTokenValidity(token string) bool {
 	parts := strings.Split(token, ".")
 	if len(parts) != 2 {

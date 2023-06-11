@@ -2,6 +2,8 @@ package keyword
 
 import (
 	"fmt"
+	"github.com/octarinesec/secret-detector/pkg/detectors/generic"
+	"strconv"
 	"strings"
 
 	"github.com/octarinesec/secret-detector/pkg/detectors/helpers"
@@ -45,19 +47,28 @@ var suspiciousKeysRegex = []string{
 
 // detector scans for secret-sounding variable names.
 type detector struct {
-	keyValueRegex *helpers.KeyValueRegex
-	keyRegex      *helpers.ValueRegex
-	valueRegex    *helpers.ValueRegex
+	keyValueRegex         *helpers.KeyValueRegex
+	keyRegex              *helpers.ValueRegex
+	valueRegex            *helpers.ValueRegex
+	valueEntropyThreshold float64
 }
 
-func NewDetector() secrets.Detector {
+func NewDetector(config []string) secrets.Detector {
 	keyRegex := fmt.Sprintf(`[\.\[~\-\w]*(?i)(?:%s)(?-i)[\.\[\]~\-\w]*`, strings.Join(suspiciousKeysRegex, "|"))
 
-	return &detector{
+	detector := &detector{
 		keyValueRegex: helpers.NewKeyValueRegex(keyRegex, valuesRegex),
 		keyRegex:      helpers.NewKeyRegex(keyRegex),
 		valueRegex:    helpers.NewValueRegex(valuesRegex),
 	}
+
+	if config != nil && len(config) > 0 {
+		threshold, err := strconv.ParseFloat(config[0], 64)
+		if err == nil {
+			detector.valueEntropyThreshold = threshold
+		}
+	}
+	return detector
 }
 
 func (_ *detector) SecretType() string {
@@ -68,7 +79,9 @@ func (d *detector) Scan(in string) ([]secrets.DetectedSecret, error) {
 	res := make([]secrets.DetectedSecret, 0)
 	matches, err := d.keyValueRegex.FindAll(in)
 	for _, match := range matches {
-		res = append(res, secrets.DetectedSecret{Key: match.Key, Type: d.SecretType(), Value: match.Value})
+		if generic.CalcShannonEntropy(match.Value) > d.valueEntropyThreshold {
+			res = append(res, secrets.DetectedSecret{Key: match.Key, Type: d.SecretType(), Value: match.Value})
+		}
 	}
 	return res, err
 }
@@ -77,7 +90,9 @@ func (d *detector) ScanMap(keyValueMap map[string]string) ([]secrets.DetectedSec
 	res := make([]secrets.DetectedSecret, 0)
 	for key, value := range keyValueMap {
 		if d.keyRegex.Match(key) && d.valueRegex.Match(value) {
-			res = append(res, secrets.DetectedSecret{Key: key, Type: d.SecretType(), Value: value})
+			if generic.CalcShannonEntropy(value) > d.valueEntropyThreshold {
+				res = append(res, secrets.DetectedSecret{Key: key, Type: d.SecretType(), Value: value})
+			}
 		}
 	}
 	return res, nil

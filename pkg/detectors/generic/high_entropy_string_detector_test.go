@@ -1,8 +1,8 @@
 package generic
 
 import (
-	"github.com/stretchr/testify/assert"
 	"github.com/octarinesec/secret-detector/pkg/detectors/tests"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -61,7 +61,7 @@ func TestCalcShannonEntropy(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			actual := calcShannonEntropy(test.input)
+			actual := CalcShannonEntropy(test.input)
 			assert.Equal(t, test.expected, actual)
 		})
 	}
