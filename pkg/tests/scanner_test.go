@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"github.com/octarinesec/secret-detector/pkg/dataformat"
 	"github.com/octarinesec/secret-detector/pkg/detectors/artifactory"
 	"github.com/octarinesec/secret-detector/pkg/detectors/aws"
@@ -25,6 +24,7 @@ import (
 	"github.com/octarinesec/secret-detector/pkg/detectors/twilio"
 	"github.com/octarinesec/secret-detector/pkg/scanner"
 	"github.com/octarinesec/secret-detector/pkg/secrets"
+	"github.com/stretchr/testify/assert"
 	"gopkg.in/ini.v1"
 	"gopkg.in/yaml.v3"
 	"math/rand"
@@ -59,8 +59,6 @@ const (
 )
 
 var (
-	defaultScanner = scanner.NewDefaultScanner()
-
 	artifactoryType  = artifactory.NewDetector().SecretType()
 	awsClientIdType  = aws.NewClientIdDetector().SecretType()
 	awsSecretKeyType = aws.NewSecretKeyDetector().SecretType()
@@ -132,6 +130,10 @@ var (
 )
 
 func TestScanFile(t *testing.T) {
+	config := scanner.NewConfigWithDefaults()
+	config.DetectorConfigs[keyword.Name] = []string{"0"} // reduce the keyword value entropy to test only the suspicious keywords
+	defaultScanner, _ := scanner.NewScannerFromConfig(config)
+
 	t.Run("test ScanFile with a binary file", func(t *testing.T) {
 		b := make([]byte, 1024)
 		rand.Read(b)
@@ -294,6 +296,10 @@ func TestJustValues(t *testing.T) {
 }
 
 func test(t *testing.T, format dataformat.DataFormat, input string, expectedSecrets []secrets.DetectedSecret) {
+	config := scanner.NewConfigWithDefaults()
+	config.DetectorConfigs[keyword.Name] = []string{"0"}                          // reduce the keyword value entropy to test only the suspicious keywords
+	config.DetectorConfigs[generic.HighEntropyStringDetectorName] = []string{"0"} // reduce the keyword value entropy to test only the suspicious keywords
+	defaultScanner, _ := scanner.NewScannerFromConfig(config)
 	t.Helper()
 
 	t.Run(fmt.Sprintf("test Scan - %s", format), func(t *testing.T) {

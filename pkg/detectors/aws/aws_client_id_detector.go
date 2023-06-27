@@ -22,7 +22,7 @@ type awsClientIdDetector struct {
 	secrets.Detector
 }
 
-func NewClientIdDetector(config []string) secrets.Detector {
+func NewClientIdDetector(config ...string) secrets.Detector {
 	return &awsClientIdDetector{
 		Detector: helpers.NewRegexDetector(clientIdDetectorSecretType, awsClientIdRegex),
 	}

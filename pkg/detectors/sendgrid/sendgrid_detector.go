@@ -22,7 +22,7 @@ type detector struct {
 	secrets.Detector
 }
 
-func NewDetector(config []string) secrets.Detector {
+func NewDetector(config ...string) secrets.Detector {
 	return &detector{
 		Detector: helpers.NewRegexDetector(secretType, apiKeyRegex),
 	}

@@ -86,8 +86,8 @@ func NewConfigWithDefaults() Config {
 			generic.HighEntropyStringDetectorName,
 		},
 		DetectorConfigs: map[string][]string{
-			keyword.Name:                          {"4"},
-			generic.HighEntropyStringDetectorName: {"5"},
+			keyword.Name:                          {"3"},
+			generic.HighEntropyStringDetectorName: {"4"},
 		},
 		ThresholdInBytes: DefaultThreshold,
 	}
@@ -128,7 +128,12 @@ type ConfigBuilder struct {
 }
 
 func NewConfigBuilder() ConfigBuilder {
-	return ConfigBuilder{}
+	builder := ConfigBuilder{}
+	builder.config.DetectorConfigs = map[string][]string{
+		keyword.Name:                          {"3"},
+		generic.HighEntropyStringDetectorName: {"4"},
+	}
+	return builder
 }
 
 func NewConfigBuilderFrom(config Config) ConfigBuilder {

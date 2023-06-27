@@ -20,7 +20,7 @@ type mwsKeyDetector struct {
 	secrets.Detector
 }
 
-func NewMWSKeyDetector(config []string) secrets.Detector {
+func NewMWSKeyDetector(config ...string) secrets.Detector {
 	return &mwsKeyDetector{
 		Detector: helpers.NewRegexDetector(mwsKeyDetectorSecretType, mwsKeyRegex),
 	}

@@ -46,7 +46,7 @@ type highEntropyStringDetector struct {
 	entropyThreshold float64
 }
 
-func NewHighEntropyStringDetector(config []string) secrets.Detector {
+func NewHighEntropyStringDetector(config ...string) secrets.Detector {
 	d := &highEntropyStringDetector{}
 	d.hexRegex = regexp.MustCompile(hexExactRegex)
 	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isHighEntropyString, highEntropyStringDetectorSecretType, base64Regex)

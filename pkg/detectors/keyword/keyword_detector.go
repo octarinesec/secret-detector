@@ -53,7 +53,7 @@ type detector struct {
 	valueEntropyThreshold float64
 }
 
-func NewDetector(config []string) secrets.Detector {
+func NewDetector(config ...string) secrets.Detector {
 	keyRegex := fmt.Sprintf(`[\.\[~\-\w]*(?i)(?:%s)(?-i)[\.\[\]~\-\w]*`, strings.Join(suspiciousKeysRegex, "|"))
 
 	detector := &detector{

@@ -26,7 +26,7 @@ type detector struct {
 	jwtParser *jwtparser.Parser
 }
 
-func NewDetector(config []string) secrets.Detector {
+func NewDetector(config ...string) secrets.Detector {
 	d := &detector{}
 	d.jwtParser = &jwtparser.Parser{}
 	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isTokenValid, secretType, jwtRegex)
