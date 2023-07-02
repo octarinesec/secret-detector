@@ -79,7 +79,7 @@ func (d *detector) Scan(in string) ([]secrets.DetectedSecret, error) {
 	res := make([]secrets.DetectedSecret, 0)
 	matches, err := d.keyValueRegex.FindAll(in)
 	for _, match := range matches {
-		if generic.CalcShannonEntropy(match.Value) > d.valueEntropyThreshold {
+		if generic.CalcShannonEntropy(match.Value) >= d.valueEntropyThreshold {
 			res = append(res, secrets.DetectedSecret{Key: match.Key, Type: d.SecretType(), Value: match.Value})
 		}
 	}
@@ -90,7 +90,7 @@ func (d *detector) ScanMap(keyValueMap map[string]string) ([]secrets.DetectedSec
 	res := make([]secrets.DetectedSecret, 0)
 	for key, value := range keyValueMap {
 		if d.keyRegex.Match(key) && d.valueRegex.Match(value) {
-			if generic.CalcShannonEntropy(value) > d.valueEntropyThreshold {
+			if generic.CalcShannonEntropy(value) >= d.valueEntropyThreshold {
 				res = append(res, secrets.DetectedSecret{Key: key, Type: d.SecretType(), Value: value})
 			}
 		}
