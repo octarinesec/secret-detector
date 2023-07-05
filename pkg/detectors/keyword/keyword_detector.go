@@ -13,9 +13,9 @@ import (
 const (
 	Name = "keyword"
 
-	// exclude values starting with $ because they are usually variables
+	// ValuesRegex exclude values starting with $ because they are usually variables
 	// exclude values surrounded by {} because they are usually computed expressions
-	valuesRegex = `[^${\s].+[^}\s]`
+	ValuesRegex = `[^${\s].+[^}\s]`
 )
 
 func init() {
@@ -57,9 +57,9 @@ func NewDetector(config ...string) secrets.Detector {
 	keyRegex := fmt.Sprintf(`[\.\[~\-\w]*(?i)(?:%s)(?-i)[\.\[\]~\-\w]*`, strings.Join(suspiciousKeysRegex, "|"))
 
 	detector := &detector{
-		keyValueRegex: helpers.NewKeyValueRegex(keyRegex, valuesRegex),
+		keyValueRegex: helpers.NewKeyValueRegex(keyRegex, ValuesRegex),
 		keyRegex:      helpers.NewKeyRegex(keyRegex),
-		valueRegex:    helpers.NewValueRegex(valuesRegex),
+		valueRegex:    helpers.NewValueRegex(ValuesRegex),
 	}
 
 	if config != nil && len(config) > 0 {

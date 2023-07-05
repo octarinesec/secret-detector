@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/mattn/go-shellwords"
 	"github.com/octarinesec/secret-detector/pkg/dataformat"
+	"github.com/octarinesec/secret-detector/pkg/detectors/helpers"
+	"github.com/octarinesec/secret-detector/pkg/detectors/keyword"
 	"github.com/octarinesec/secret-detector/pkg/secrets"
 	"strings"
 )
@@ -79,17 +81,22 @@ func splitCommand(command string) ([][]string, error) {
 }
 
 func getCommandArgMap(args []string, id int) (map[string]string, bool) {
+	keyValueExtractor := helpers.NewDefaultKeyValueRegex(keyword.ValuesRegex)
 	argMap := make(map[string]string)
 
 	nonFlagArgumentIndex := 0
 	for i := 0; i < len(args); i++ {
-		if isFlag(args[i]) {
-			// parse the case of --key=value
-			if equalsIndex := strings.Index(args[i], "="); equalsIndex != -1 {
-				argMap[cleanFlag(args[i][:equalsIndex])] = args[i][equalsIndex+1:]
-				continue
-			}
 
+		// parse the case of --key=value or key=value in case of label or env variable
+		if equalsIndex := strings.Index(args[i], "="); equalsIndex != -1 {
+			extractedKeyValues, _ := keyValueExtractor.FindAll(cleanFlag(args[i]))
+			for _, detectedKeyValue := range extractedKeyValues {
+				argMap[detectedKeyValue.Key] = detectedKeyValue.Value
+			}
+			continue
+		}
+
+		if isFlag(args[i]) {
 			// parse the case of -key value or --key value
 			// check that the next argument is not a flag
 			if i != len(args)-1 && !isFlag(args[i+1]) {
