@@ -42,10 +42,10 @@ func isFlag(arg string) bool {
 
 func cleanFlag(flag string) string {
 	// clean -flag or --flag to flag
-	if flag[0] == '-' {
+	if len(flag) > 0 && flag[0] == '-' {
 		flag = flag[1:]
 	}
-	if flag[0] == '-' {
+	if len(flag) > 0 && flag[0] == '-' {
 		flag = flag[1:]
 	}
 	return flag
