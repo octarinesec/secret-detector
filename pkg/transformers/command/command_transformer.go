@@ -37,7 +37,7 @@ func (t *transformer) SupportFiles() bool {
 }
 
 func isFlag(arg string) bool {
-	return arg[0] == '-'
+	return len(arg) > 0 && arg[0] == '-'
 }
 
 func cleanFlag(flag string) string {
