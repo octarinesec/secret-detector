@@ -30,7 +30,7 @@ func NewURLPasswordDetector(config ...string) secrets.Detector {
 	}
 }
 
-func isUrlWithPassword(s string) bool {
+func isUrlWithPassword(_, s string) bool {
 	u, _ := url.Parse(s)
 	if u == nil || u.User == nil {
 		return false

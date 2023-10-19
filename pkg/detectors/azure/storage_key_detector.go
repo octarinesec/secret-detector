@@ -3,12 +3,15 @@ package azure
 import (
 	"github.com/octarinesec/secret-detector/pkg/detectors/helpers"
 	"github.com/octarinesec/secret-detector/pkg/secrets"
+	"strings"
 )
 
 const (
-	Name                 = "azure"
-	secretType           = "Azure Storage Account access key"
-	azureStorageKeyRegex = `[a-zA-Z0-9+\/=]{88}`
+	Name       = "azure"
+	secretType = "Azure Storage Account access key"
+	// Account Key (AccountKey=xxxxxxxxx)
+	azureStorageKeyRegex = `(AccountKey=)?[a-zA-Z0-9+\/=]{88}`
+	expectedMatchKey     = "AccountKey"
 )
 
 func init() {
@@ -20,7 +23,12 @@ type detector struct {
 }
 
 func NewDetector(config ...string) secrets.Detector {
-	return &detector{
-		Detector: helpers.NewRegexDetector(secretType, azureStorageKeyRegex),
-	}
+	d := &detector{}
+	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isStorageKey, secretType, azureStorageKeyRegex)
+	return d
+}
+
+func (d *detector) isStorageKey(key, value string) bool {
+	// the expectedMatchKey is necessary, we will also check the key for it if it's part of a map
+	return strings.HasPrefix(value, expectedMatchKey) || strings.HasSuffix(key, expectedMatchKey)
 }
