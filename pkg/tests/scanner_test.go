@@ -85,7 +85,7 @@ var (
 		awsClientIdKey:  `A3TX1234567890ABCDEF`,
 		awsKey:          `aws"12345+67890/abcdefghijklm+NOPQRSTUVWXYZ+"`,
 		mwsKey:          `amzn.mws.12345678-1234-1234-1234-123456789012`,
-		azureKey:        `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuv==`,
+		azureKey:        `AccountKey=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuv==`,
 		basicAuthKey:    `Basic ABCDEFGHIJ+KLMNOPQRST/UVWXYZ,abcdefghij_klmnopqrstuvwxyz-1234567890==`,
 		bearerAuthKey:   `Bearer ABCDEFGHIJ+KLMNOPQRST/UVWXYZ,abcdefghij_klmnopq.rstuvwxyz-1234567890==`,
 		entropyKey:      `dGhpcyBpcyBhIHRlc3QgZm9yIGhpZ2ggZW50cm9weSBiYXNlNjQgc2VjcmV0IGRldGVjdGlvbg`,
@@ -274,6 +274,9 @@ func TestINI(t *testing.T) {
 
 func TestJustValues(t *testing.T) {
 	for _, secret := range expectedSecrets {
+		if secret.Key == urlPwdKey {
+			fmt.Print("url")
+		}
 		var in string
 		expected := make([]secrets.DetectedSecret, 0)
 		switch secret.Key {
@@ -286,6 +289,9 @@ func TestJustValues(t *testing.T) {
 				secret.Value = secret.Value[:i]
 			}
 			expected = append(expected, secrets.DetectedSecret{Key: "", Type: secret.Type, Value: secret.Value})
+		case azureKey:
+			in = input[secret.Key]
+			expected = append(expected, secrets.DetectedSecret{Key: "AccountKey", Type: secret.Type, Value: secret.Value[11:]})
 		default:
 			in = input[secret.Key]
 			expected = append(expected, secrets.DetectedSecret{Key: "", Type: secret.Type, Value: secret.Value})

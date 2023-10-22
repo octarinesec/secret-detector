@@ -59,7 +59,7 @@ func NewHighEntropyStringDetector(config ...string) secrets.Detector {
 	return d
 }
 
-func (d *highEntropyStringDetector) isHighEntropyString(s string) bool {
+func (d *highEntropyStringDetector) isHighEntropyString(_, s string) bool {
 	// ignore digit only strings
 	if isNumeric(s) {
 		return false

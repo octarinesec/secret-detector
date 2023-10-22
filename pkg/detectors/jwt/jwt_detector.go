@@ -33,7 +33,7 @@ func NewDetector(config ...string) secrets.Detector {
 	return d
 }
 
-func (d *detector) isTokenValid(token string) bool {
+func (d *detector) isTokenValid(_, token string) bool {
 	numberOfSegments := strings.Count(token, ".") + 1
 	if numberOfSegments == 2 {
 		return d.ensureUnsignedTokenValidity(token)

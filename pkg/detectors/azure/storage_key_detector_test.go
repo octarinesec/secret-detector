@@ -7,12 +7,15 @@ import (
 )
 
 var testCases = []tests.TestCase{
-	{"valid key", `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuv==`, true},
-	{"valid key - only letters", `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, true},
-	{"valid key - only digits", `1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678`, true},
-	{"too long", `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuvw==`, false},
-	{"too short", `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstu==`, false},
-	{"key with illegal characters", `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-/abcdefghijklmnopqrstuv==`, false},
+	{"valid key", `AccountKey=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuv==`, true},
+	{"invalid key", `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuv==`, false},
+	{"valid key - only letters", `AccountKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, true},
+	{"invalid key - only letters", `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, false},
+	{"valid key - only digits", `AccountKey=1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678`, true},
+	{"invalid key - only digits", `1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678`, false},
+	{"too long", `AccountKey=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstuvw==`, false},
+	{"too short", `AccountKey=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890+/abcdefghijklmnopqrstu==`, false},
+	{"key with illegal characters", `AccountKey=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-/abcdefghijklmnopqrstuv==`, false},
 
 	{"empty input", "", false},
 }
