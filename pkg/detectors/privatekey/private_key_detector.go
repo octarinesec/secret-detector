@@ -31,6 +31,6 @@ type detector struct {
 
 func NewDetector(config ...string) secrets.Detector {
 	return &detector{
-		Detector: helpers.NewRegexDetector(secretType, privateKeysRegex...),
+		Detector: helpers.NewRegexDetectorBuilder(secretType, privateKeysRegex...).Build(),
 	}
 }

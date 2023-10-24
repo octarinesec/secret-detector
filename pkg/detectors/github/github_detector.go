@@ -23,6 +23,6 @@ type detector struct {
 
 func NewDetector(config ...string) secrets.Detector {
 	return &detector{
-		Detector: helpers.NewRegexDetector(secretType, tokenRegex),
+		Detector: helpers.NewRegexDetectorBuilder(secretType, tokenRegex).Build(),
 	}
 }

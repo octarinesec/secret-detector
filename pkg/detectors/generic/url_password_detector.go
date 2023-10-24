@@ -25,9 +25,9 @@ type urlPasswordDetector struct {
 }
 
 func NewURLPasswordDetector(config ...string) secrets.Detector {
-	return &urlPasswordDetector{
-		Detector: helpers.NewRegexDetectorWithVerifier(isUrlWithPassword, urlPasswordDetectorSecretType, urlPasswordRegex),
-	}
+	d := &urlPasswordDetector{}
+	d.Detector = helpers.NewRegexDetectorBuilder(urlPasswordDetectorSecretType, urlPasswordRegex).WithVerifier(isUrlWithPassword).Build()
+	return d
 }
 
 func isUrlWithPassword(_, s string) bool {

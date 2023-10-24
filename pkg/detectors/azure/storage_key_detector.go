@@ -24,7 +24,7 @@ type detector struct {
 
 func NewDetector(config ...string) secrets.Detector {
 	d := &detector{}
-	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isStorageKey, secretType, azureStorageKeyRegex)
+	d.Detector = helpers.NewRegexDetectorBuilder(secretType, azureStorageKeyRegex).WithVerifier(d.isStorageKey).Build()
 	return d
 }
 

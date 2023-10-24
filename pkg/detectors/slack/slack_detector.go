@@ -41,6 +41,6 @@ type detector struct {
 
 func NewDetector(config ...string) secrets.Detector {
 	return &detector{
-		Detector: helpers.NewRegexDetector(secretType, tokensRegex, webhookRegex),
+		Detector: helpers.NewRegexDetectorBuilder(secretType, tokensRegex, webhookRegex).Build(),
 	}
 }

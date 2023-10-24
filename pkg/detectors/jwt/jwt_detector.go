@@ -29,7 +29,7 @@ type detector struct {
 func NewDetector(config ...string) secrets.Detector {
 	d := &detector{}
 	d.jwtParser = &jwtparser.Parser{}
-	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isTokenValid, secretType, jwtRegex)
+	d.Detector = helpers.NewRegexDetectorBuilder(secretType, jwtRegex).WithVerifier(d.isTokenValid).Build()
 	return d
 }
 

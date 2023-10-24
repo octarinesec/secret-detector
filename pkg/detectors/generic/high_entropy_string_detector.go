@@ -49,7 +49,7 @@ type highEntropyStringDetector struct {
 func NewHighEntropyStringDetector(config ...string) secrets.Detector {
 	d := &highEntropyStringDetector{}
 	d.hexRegex = regexp.MustCompile(hexExactRegex)
-	d.Detector = helpers.NewRegexDetectorWithVerifier(d.isHighEntropyString, highEntropyStringDetectorSecretType, base64Regex)
+	d.Detector = helpers.NewRegexDetectorBuilder(highEntropyStringDetectorSecretType, base64Regex).WithVerifier(d.isHighEntropyString).Build()
 	if config != nil && len(config) > 0 {
 		threshold, err := strconv.ParseFloat(config[0], 64)
 		if err == nil {

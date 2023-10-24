@@ -10,21 +10,27 @@ import (
 
 // opt = optional
 const (
-	multilineFlag           = `(?m)`
-	linePrefix              = `(?:^|[\t ]+)`
-	optDeclareKeyword       = `(?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)`
-	keyOptPrefix            = `\[?[\t ]*['"]?`
-	defaultKeyCaptureGroup  = `([\t a-zA-Z0-9$\/_-]+)`
-	keyOptSuffix            = `['"]?[\t ]*\]?`
-	delimiterCaptureGroup   = `\s*(:|=|:=)\s*`
-	valueOptPrefix          = `\[?[\t ]*['"]?`
-	placeholderCaptureGroup = `(%s)`
-	valueOptSuffix          = `['"]?[\t ]*\]?[\t ]*;?`
-	lineSuffix              = `(?:[\t ]+|$)`
+	multilineFlag                        = `(?m)`
+	linePrefix                           = `(?:^|[\t ]+)`
+	optDeclareKeyword                    = `(?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)`
+	keyOptPrefix                         = `\[?[\t ]*['"]?`
+	defaultKeyCaptureGroup               = `([\t a-zA-Z0-9$\/_-]+)`
+	keyOptSuffix                         = `['"]?[\t ]*\]?`
+	delimiterCaptureGroup                = `\s*(:|=|:=)\s*`
+	delimiterCaptureGroupWithoutNewLines = `[^\S\r\n]*(:|=|:=)[^\S\r\n]*`
+	valueOptPrefix                       = `\[?[\t ]*['"]?`
+	placeholderCaptureGroup              = `(%s)`
+	valueOptSuffix                       = `['"]?[\t ]*\]?[\t ]*;?`
+	lineSuffix                           = `(?:[\t ]+|$)`
 
 	// defaultKeyValueRegex = (?m)(?:^|[\t ]+)(?:(?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)\[?[\t ]*['"]?([\t a-zA-Z0-9$\/_-]+)['"]?[\t ]*\]?\s*(:|=|:=)\s*)?\[?[\t ]*['"]?(%s)['"]?[\t ]*\]?[\t ]*;?(?:[\t ]+|$)
 	defaultKeyValueRegex = multilineFlag + linePrefix +
 		`(?:` + optDeclareKeyword + keyOptPrefix + defaultKeyCaptureGroup + keyOptSuffix + delimiterCaptureGroup + `)?` +
+		valueOptPrefix + placeholderCaptureGroup + valueOptSuffix + lineSuffix
+
+	// defaultKeyValueRegexWithoutNewLine = (?m)(?:^|[\t ]+)(?:(?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)\[?[\t ]*['"]?([\t a-zA-Z0-9$\/_-]+)['"]?[\t ]*\]?[^\S\r\n]*(:|=|:=)[^\S\r\n]*)?\[?[\t ]*['"]?(%s)['"]?[\t ]*\]?[\t ]*;?(?:[\t ]+|$)
+	defaultKeyValueRegexWithoutNewLine = multilineFlag + linePrefix +
+		`(?:` + optDeclareKeyword + keyOptPrefix + defaultKeyCaptureGroup + keyOptSuffix + delimiterCaptureGroupWithoutNewLines + `)?` +
 		valueOptPrefix + placeholderCaptureGroup + valueOptSuffix + lineSuffix
 
 	// keyValueRegex = (?m)(?:^|[\t ]+)(?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)\[?[\t ]*['"]?(%s)['"]?[\t ]*\]?\s*(:|=|:=)\s*\[?[\t ]*['"]?(%s)['"]?[\t ]*\]?[\t ]*;?(?:[\t ]+|$)
@@ -42,45 +48,50 @@ type MatchResult struct {
 }
 
 // KeyValueRegex should match strings in a structure of key (default or injected via NewKeyValueRegex), a delimiter,
-//   and value injected via argument.
+//
+//	and value injected via argument.
 //
 // Expected pattern examples:
-//   key: value
-//   "key": "value"
-//   key=value
-//   "key" = 'value'
-//   key := value
-//   [ "key" ] = [ "value" ] ;
-//   value
-//   "value"
+//
+//	key: value
+//	"key": "value"
+//	key=value
+//	"key" = 'value'
+//	key := value
+//	[ "key" ] = [ "value" ] ;
+//	value
+//	"value"
 //
 // Regex breakdown:
-//   Key:
-//     (?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)
-//                              an optional declaration keyword from commonly used languages like bash, powershell, JS.
-//                              supported keywords: var, let, set, dim, declare, export, const, readonly
 //
-//     \[?[\t ]*['"]?			an optional prefix: a square bracket ([) and a single (') or double quote (").
-//     ([\t a-zA-Z0-9\/_-]+)	default key name pattern, comprised of letters, digits, spaces, tabs, slash (/),
-//                              underscore (_) and dash (-).
-//     							captured as capture group #1.
-//     ['"]?[\t ]*\]?			an optional suffix: single (') or double quote (") and a square bracket (]).
+//		Key:
+//		  (?i)(?:(?:var|let|set|dim|declare|export|const|readonly)[\t ]+)?(?-i)
+//		                           an optional declaration keyword from commonly used languages like bash, powershell, JS.
+//		                           supported keywords: var, let, set, dim, declare, export, const, readonly
 //
-//   Delimiter:
-//     \s*						optional whitespaces between key and delimiter.
-//     (:|=|:=)					a delimiter: colon (:), equal sign (=), or colon equal sign (:=).
-//     							captured as capture group #2.
-//     \s*						optional whitespaces between delimiter and value.
+//		  \[?[\t ]*['"]?			an optional prefix: a square bracket ([) and a single (') or double quote (").
+//		  ([\t a-zA-Z0-9\/_-]+)	default key name pattern, comprised of letters, digits, spaces, tabs, slash (/),
+//		                           underscore (_) and dash (-).
+//		  							captured as capture group #1.
+//		  ['"]?[\t ]*\]?			an optional suffix: single (') or double quote (") and a square bracket (]).
 //
-//     (?: )?					key and delimiter regex are surrounded by an optional non-capturing group.
-//     							That makes the key and delimiter optional (they are capture only if both exist).
+//		Delimiter:
+//		  \s*						optional whitespaces between key and delimiter.
+//		  (:|=|:=)					a delimiter: colon (:), equal sign (=), or colon equal sign (:=).
+//		  							captured as capture group #2.
+//		  \s*						optional whitespaces between delimiter and value.
 //
-//   Value:
-//     \[?[\t ]*['"]?			an optional prefix: a square bracket ([) and a single (') or double quote (").
-//     (%s)               		the value regex will be injected here.
-//     							captured as capture group #3.
-//     							internal capturing groups inside value regex will be captured as #4-#n.
-//     ['"]?[\t ]*\]?[\t ]*;?	an optional suffix: single (') or double quote ("), a square bracket (]) and a semicolon (;).
+//		  (?: )?					key and delimiter regex are surrounded by an optional non-capturing group.
+//		  							That makes the key and delimiter optional (they are capture only if both exist).
+//
+//	    [^\S\r\n]*                 the regex without new line uses it, the \S is negative of all whitespaces and by using ^ on this we get all the whitespaces, together with \r\n we have all whitespaces except new lines.
+//
+//		Value:
+//		  \[?[\t ]*['"]?			an optional prefix: a square bracket ([) and a single (') or double quote (").
+//		  (%s)               		the value regex will be injected here.
+//		  							captured as capture group #3.
+//		  							internal capturing groups inside value regex will be captured as #4-#n.
+//		  ['"]?[\t ]*\]?[\t ]*;?	an optional suffix: single (') or double quote ("), a square bracket (]) and a semicolon (;).
 type KeyValueRegex struct {
 	keyValueRegex []*regexp.Regexp
 }
@@ -89,6 +100,17 @@ func NewDefaultKeyValueRegex(valueRegex ...string) *KeyValueRegex {
 	s := make([]*regexp.Regexp, 0, len(valueRegex))
 	for _, regex := range valueRegex {
 		s = append(s, regexp.MustCompile(fmt.Sprintf(defaultKeyValueRegex, regex)))
+	}
+
+	return &KeyValueRegex{
+		keyValueRegex: s,
+	}
+}
+
+func NewDefaultKeyValueRegexWithoutNewLine(valueRegex ...string) *KeyValueRegex {
+	s := make([]*regexp.Regexp, 0, len(valueRegex))
+	for _, regex := range valueRegex {
+		s = append(s, regexp.MustCompile(fmt.Sprintf(defaultKeyValueRegexWithoutNewLine, regex)))
 	}
 
 	return &KeyValueRegex{
