@@ -7,12 +7,12 @@ import (
 
 var testCases = []tests.TestCase{
 	// Shortest possible auth is ":" -> to base64 without padding
-	{"valid token - minimal length", "basic Og", true},
-	{"valid token - minimal length with padding", "basic Og==", true},
-	{"valid token - long", "Basic ABCDEFGHIJ+KLMNOPQRST/UVWXYZ,abcdefghij_klmnopqrstuvwxyz-1234567890==", true},
-	{"valid token - with header key", "Authorization: Basic dXNlcjpwd2Q=", true},
-	{"valid token - with quoted header key", `"Authorization": "Basic dXNlcjpwd2Q="`, true},
-	{"valid token - single padding", "BASIC  YWRtaW46YWRtaW4=", true},
+	{"valid token - minimal length", "basic QUI=", true},
+	{"invalid token - minimal length with invalid base 64", "basic Og=", false},
+	{"valid token - minimal length without padding", "basic ZGRk", true},
+	{"valid token - long", "Basic SGVsbG8gaG93IGFyZSB5b3UgdGhpcyBpcyBteSBwYXNzd29yZCBzaGho", true},
+	{"valid token - with header key", "Authorization: Basic aGkgeW8=", true},
+	{"valid token - with quoted header key", `"Authorization": "Basic aGkgeW8="`, true},
 
 	{"token too short", "basic O", false},
 	{"token too short with padding", "basic O==", false},
