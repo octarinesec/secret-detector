@@ -6,13 +6,15 @@ import (
 )
 
 var testCases = []tests.TestCase{
-	{"valid token - minimal length", "bearer xx", true},
-	{"valid token - with header key", "Authorization: Bearer dG9wX3NlY3JldA==", true},
-	{"valid token - with quoted header key", `"Authorization": "Bearer dG9wX3NlY3JldA=="`, true},
-	{"valid token - long", "Bearer  ABCDEFGHIJ+KLMNOPQRST/UVWXYZ,abcdefghij_klmnopq.rstuvwxyz-1234567890==", true},
-	{"valid token", "headers = {\"Authorization\": \"Bearer aoekthaoexukatoehsxkth8324AOX\"}", true},
+	{"valid token - minimal length", "bearer cw==", true},
+	{"valid token - minimal length without padding", "bearer ZGRk\"", true},
+	{"valid token - with header key", "Authorization: Bearer aGkgeW8=", true},
+	{"valid token - with quoted header key", `"Authorization": "Bearer aGkgeW8="`, true},
+	{"valid token - long", "Bearer  SGVsbG8gaG93IGFyZSB5b3UgdGhpcyBpcyBteSBwYXNzd29yZCBzaGho", true},
+	{"valid token - with authorization", "\"Authorization\": \"Bearer aGkgeW8=\"", true},
 
-	{"invalid token - without bearer", "headers = {\"Authorization\": \"aoekthaoexukatoehsxkth8324AOX\"}", false},
+	{"invalid token - minimal length with invalid base 64", "bearer  Og=", false},
+	{"invalid token - without bearer", "headers = {\"Authorization\": \"aGkgeW8=\"}", false},
 	{"invalid token - test token", " headers = {\"Authorization\": \"Bearer test\"}", false},
 	{"false positive", "TIPC_NL_BEARER_DISABLE", false},
 	{"false positive 2", "TIPC_NL_BEARER_GET", false},
