@@ -6,12 +6,12 @@ import (
 )
 
 var testCases = []tests.TestCase{
-	{"valid token - minimal length", "bearer cw==", true},
-	{"valid token - minimal length without padding", "bearer ZGRk\"", true},
-	{"valid token - with header key", "Authorization: Bearer aGkgeW8=", true},
-	{"valid token - with quoted header key", `"Authorization": "Bearer aGkgeW8="`, true},
-	{"valid token - long", "Bearer  SGVsbG8gaG93IGFyZSB5b3UgdGhpcyBpcyBteSBwYXNzd29yZCBzaGho", true},
-	{"valid token - with authorization", "\"Authorization\": \"Bearer aGkgeW8=\"", true},
+	{"valid token - minimal length", "bearer dTpw", true},
+	{"valid token - minimal length without padding", "bearer dTpw\"", true},
+	{"valid token - with header key", "Authorization: Bearer ZDp6cg==", true},
+	{"valid token - with quoted header key", `"Authorization": "Bearer YTpn"`, true},
+	{"valid token - long", "Bearer  dXNlcm5mc2RzZ2dmc2dzZmdzZmFtZTpwZ3NzZmdzZ3Nnc2RndGFlZ2FnYXNzd29yZGRkZGQ=", true},
+	{"valid token - with authorization", "\"Authorization\": \"Bearer YTpn\"", true},
 
 	{"invalid token - minimal length with invalid base 64", "bearer  Og=", false},
 	{"invalid token - without bearer", "headers = {\"Authorization\": \"aGkgeW8=\"}", false},

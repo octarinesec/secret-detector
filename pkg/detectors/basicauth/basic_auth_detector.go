@@ -12,7 +12,8 @@ const (
 	secretType = "HTTP Basic Authentication"
 
 	// basicAuthRegex represents a regex that matches HTTP basic authentication.
-	// the parameter should be a valid base 64.
+	// the parameter is a valid base 64, where the encoded value is ID and password joined by a single colon :.
+	// https://en.wikipedia.org/wiki/Basic_access_authentication
 	basicAuthRegex = `(?i)(?:\"?authorization\"? *[:=] *)?\"?basic(?-i) +[a-zA-Z0-9+\/,_\-]{2,}={0,2}\"?`
 )
 
@@ -40,6 +41,16 @@ func isParameterValidBase64(_, s string) bool {
 		parameter = parameter[:len(parameter)-1]
 	}
 
-	_, err := base64.StdEncoding.DecodeString(parameter)
-	return err == nil
+	encodedValue, err := base64.StdEncoding.DecodeString(parameter)
+	if err != nil {
+		return false
+	}
+
+	// check if the encoded value contains : in the middle
+	for _, char := range encodedValue[1 : len(encodedValue)-1] {
+		if char == ':' {
+			return true
+		}
+	}
+	return false
 }

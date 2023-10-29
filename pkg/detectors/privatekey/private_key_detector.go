@@ -15,14 +15,24 @@ func init() {
 }
 
 var privateKeysRegex = []string{
-	".*BEGIN DSA PRIVATE KEY.*",
-	".*BEGIN EC PRIVATE KEY.*",
-	".*BEGIN OPENSSH PRIVATE KEY.*",
-	".*BEGIN PGP PRIVATE KEY BLOCK.*",
-	".*BEGIN PRIVATE KEY.*",
-	".*BEGIN RSA PRIVATE KEY.*",
-	".*BEGIN SSH2 ENCRYPTED PRIVATE KEY.*",
+	//".*BEGIN DSA PRIVATE KEY.*",
+	//".*BEGIN EC PRIVATE KEY.*",
+	//".*BEGIN OPENSSH PRIVATE KEY.*",
+	//".*BEGIN PGP PRIVATE KEY BLOCK.*",
+	//".*BEGIN PRIVATE KEY.*",
+	//".*BEGIN RSA PRIVATE KEY.*",
+	//".*BEGIN SSH2 ENCRYPTED PRIVATE KEY.*",
+	// PUTTY user key
 	".*PuTTY-User-Key-File-.*",
+	// private key regex, for example it includes:
+	//".*BEGIN DSA PRIVATE KEY.*",
+	//".*BEGIN EC PRIVATE KEY.*",
+	//".*BEGIN OPENSSH PRIVATE KEY.*",
+	//".*BEGIN PGP PRIVATE KEY BLOCK.*",
+	//".*BEGIN PRIVATE KEY.*",
+	//".*BEGIN RSA PRIVATE KEY.*",
+	//".*BEGIN SSH2 ENCRYPTED PRIVATE KEY.*",
+	"(-*BEGIN[ \\S]+?PRIVATE KEY(?: BLOCK)?-*)([\\S\n]{4,}?)(-*END[ \\S]+?PRIVATE KEY(?: BLOCK)?-*)",
 }
 
 type detector struct {
