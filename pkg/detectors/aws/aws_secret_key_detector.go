@@ -21,6 +21,6 @@ type awsSecretKeyDetector struct {
 
 func NewSecretKeyDetector(config ...string) secrets.Detector {
 	return &awsSecretKeyDetector{
-		Detector: helpers.NewRegexDetector(secretKeyDetectorSecretType, awsSecretKeyRegex),
+		Detector: helpers.NewRegexDetectorBuilder(secretKeyDetectorSecretType, awsSecretKeyRegex).Build(),
 	}
 }

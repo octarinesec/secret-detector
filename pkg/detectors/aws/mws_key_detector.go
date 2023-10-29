@@ -22,6 +22,6 @@ type mwsKeyDetector struct {
 
 func NewMWSKeyDetector(config ...string) secrets.Detector {
 	return &mwsKeyDetector{
-		Detector: helpers.NewRegexDetector(mwsKeyDetectorSecretType, mwsKeyRegex),
+		Detector: helpers.NewRegexDetectorBuilder(mwsKeyDetectorSecretType, mwsKeyRegex).Build(),
 	}
 }

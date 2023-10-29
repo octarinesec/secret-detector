@@ -13,24 +13,6 @@ type regexDetector struct {
 	verifier      DetectionVerifier
 }
 
-// NewRegexDetector creates a generic regex detector.
-// It can be used as an embedded struct to implement most types of regex based detectors.
-func NewRegexDetector(secretType string, regex ...string) secrets.Detector {
-	return NewRegexDetectorWithVerifier(nil, secretType, regex...)
-}
-
-// NewRegexDetectorWithVerifier creates a generic regex detector.
-// It can be used as an embedded struct to implement most types of regex based detectors.
-// verifier function should check if the string matched by regex is a valid detection.
-func NewRegexDetectorWithVerifier(verifier DetectionVerifier, secretType string, regex ...string) secrets.Detector {
-	return &regexDetector{
-		secretType:    secretType,
-		keyValueRegex: NewDefaultKeyValueRegex(regex...),
-		valueRegex:    NewValueRegex(regex...),
-		verifier:      verifier,
-	}
-}
-
 func (d *regexDetector) SecretType() string {
 	return d.secretType
 }

@@ -7,13 +7,15 @@ import (
 
 var testCases = []tests.TestCase{
 	// Shortest possible auth is ":" -> to base64 without padding
-	{"valid token - minimal length", "basic Og", true},
-	{"valid token - minimal length with padding", "basic Og==", true},
-	{"valid token - long", "Basic ABCDEFGHIJ+KLMNOPQRST/UVWXYZ,abcdefghij_klmnopqrstuvwxyz-1234567890==", true},
-	{"valid token - with header key", "Authorization: Basic dXNlcjpwd2Q=", true},
-	{"valid token - with quoted header key", `"Authorization": "Basic dXNlcjpwd2Q="`, true},
-	{"valid token - single padding", "BASIC  YWRtaW46YWRtaW4=", true},
+	{"valid token - minimal length", "basic dTpw", true},
+	{"valid token - with padding", "basic ZDp6cg==", true},
+	{"valid token - long", "Basic dXNlcm5mc2RzZ2dmc2dzZmdzZmFtZTpwZ3NzZmdzZ3Nnc2RndGFlZ2FnYXNzd29yZGRkZGQ=", true},
+	{"valid token - with header key", "Authorization: Basic YTpn", true},
+	{"valid token - with quoted header key", `"Authorization": "Basic YTpn"`, true},
 
+	{"invalid token - minimal length with invalid base 64", "basic Og=", false},
+	{"invalid token - without padding", "basic ZDp6cg", false},
+	{"invalid token - without : inside the base64", "basic YWRkc2Y6", false},
 	{"token too short", "basic O", false},
 	{"token too short with padding", "basic O==", false},
 	{"missing basic auth scheme", "YWRtaW46YWRtaW4=", false},

@@ -22,7 +22,7 @@ type detector struct {
 }
 
 func NewDetector(config ...string) secrets.Detector {
-	return &detector{
-		Detector: helpers.NewRegexDetector(secretType, accessTokenRegex, oAuthSecretRegex),
-	}
+	d := &detector{}
+	d.Detector = helpers.NewRegexDetectorBuilder(secretType, accessTokenRegex, oAuthSecretRegex).Build()
+	return d
 }

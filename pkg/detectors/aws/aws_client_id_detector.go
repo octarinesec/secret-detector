@@ -24,6 +24,6 @@ type awsClientIdDetector struct {
 
 func NewClientIdDetector(config ...string) secrets.Detector {
 	return &awsClientIdDetector{
-		Detector: helpers.NewRegexDetector(clientIdDetectorSecretType, awsClientIdRegex),
+		Detector: helpers.NewRegexDetectorBuilder(clientIdDetectorSecretType, awsClientIdRegex).Build(),
 	}
 }
