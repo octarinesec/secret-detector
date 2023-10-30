@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 
+	"github.com/inhies/go-bytesize"
 	"github.com/octarinesec/secret-detector/pkg/dataformat"
 	"github.com/octarinesec/secret-detector/pkg/secrets"
 )
@@ -90,7 +91,8 @@ func (s *scanner) ScanFile(path string) ([]secrets.DetectedSecret, error) {
 		return nil, err
 	}
 	if !s.validateThreshold(stat.Size()) {
-		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType, Key: path}}, nil
+		byteSize := bytesize.New(float64(stat.Size()))
+		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType, Key: path, Value: byteSize.String()}}, nil
 	}
 
 	return s.ScanWithFormat(f, dataformat.FromPath(path))
@@ -107,7 +109,8 @@ func (s *scanner) ScanFileReader(in io.Reader, path string, size int64) ([]secre
 	}
 
 	if !s.validateThreshold(size) {
-		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType, Key: path}}, nil
+		byteSize := bytesize.New(float64(size))
+		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType, Key: path, Value: byteSize.String()}}, nil
 	}
 
 	return s.ScanStringWithFormat(inStr, dataformat.FromPath(path))
@@ -157,7 +160,8 @@ func (s *scanner) scan(in string, transformers []secrets.Transformer) (res []sec
 
 	// a file that exceeds the threshold size is considered as a suspicious file, so a detection is returned
 	if !s.validateThreshold(int64(len(in))) {
-		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType}}, nil
+		byteSize := bytesize.New(float64(len(in)))
+		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType, Value: byteSize.String()}}, nil
 	}
 
 	if keyValueMap, isTransformed := transform(in, transformers); isTransformed {
