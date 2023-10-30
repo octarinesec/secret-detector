@@ -156,7 +156,7 @@ func TestScanFile(t *testing.T) {
 		if assert.Len(t, actualSecrets, 1) {
 			assert.Equal(t, actualSecrets[0].Key, path)
 			assert.Equal(t, actualSecrets[0].Type, scanner.SizeThresholdViolationType)
-			assert.Equal(t, actualSecrets[0].Value, "")
+			assert.Equal(t, actualSecrets[0].Value, "9.54MB")
 		}
 	})
 
