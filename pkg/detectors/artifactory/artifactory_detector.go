@@ -15,6 +15,7 @@ const (
 
 	// artifactoryEncryptedPasswordRegex represents a regex that matches an artifactory encrypted password.
 	// Artifactory encrypted passwords always begin with AP.
+	// this detection is removed
 	artifactoryEncryptedPasswordRegex = `AP[\dABCDEF][a-zA-Z0-9]{8,}`
 )
 
@@ -28,6 +29,6 @@ type detector struct {
 
 func NewDetector(config ...string) secrets.Detector {
 	d := &detector{}
-	d.Detector = helpers.NewRegexDetectorBuilder(secretType, artifactoryTokenRegex, artifactoryEncryptedPasswordRegex).Build()
+	d.Detector = helpers.NewRegexDetectorBuilder(secretType, artifactoryTokenRegex).Build()
 	return d
 }
