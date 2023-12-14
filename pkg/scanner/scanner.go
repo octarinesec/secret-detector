@@ -99,19 +99,27 @@ func (s *scanner) ScanFile(path string) ([]secrets.DetectedSecret, error) {
 }
 
 func (s *scanner) ScanFileReader(in io.Reader, path string, size int64) ([]secrets.DetectedSecret, error) {
-	inStr, err := readerToString(in)
+	isText, prefixData, err := isTextReader(in)
 	if err != nil {
 		return nil, err
 	}
 
-	if !isTextString(inStr) {
+	if !isText {
 		return nil, secrets.NewNotTextFileError(path)
 	}
 
+	// Check the threshold _before_ materializing the data in memory to avoid potential OOMs with large text files
 	if !s.validateThreshold(size) {
 		byteSize := bytesize.New(float64(size))
 		return []secrets.DetectedSecret{{Type: SizeThresholdViolationType, Key: path, Value: byteSize.String()}}, nil
 	}
+
+	remainingStr, err := readerToString(in)
+	if err != nil {
+		return nil, err
+	}
+
+	inStr := string(prefixData) + remainingStr
 
 	return s.ScanStringWithFormat(inStr, dataformat.FromPath(path))
 }
