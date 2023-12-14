@@ -39,10 +39,14 @@ import (
 	"unicode/utf8"
 )
 
+const (
+	maxBytesUsedToDetermineText = 1024
+)
+
 // isTextFile reports whether the first kb of the file looks like correct UTF-8.
 // If so it is likely that the file contains human-readable text.
 func isTextFile(f *os.File) bool {
-	var buf [1024]byte
+	var buf [maxBytesUsedToDetermineText]byte
 	n, err := f.Read(buf[0:])
 	if err != nil {
 		return false
@@ -53,6 +57,21 @@ func isTextFile(f *os.File) bool {
 		return false
 	}
 	return isTextString(string(buf[0:n])) // return if the readed string is a text
+}
+
+// isTextReader checks if the data in the provided reader looks like correct UTF-8.
+// It will consume up to 1KB from the reader to do so.
+// Since the reader might not be seekable, the second return value holds the read data and should be used to properly get the whole input stream.
+func isTextReader(reader io.Reader) (bool, []byte, error) {
+	var buf [maxBytesUsedToDetermineText]byte
+	n, err := reader.Read(buf[0:])
+	if err != nil {
+		return false, nil, err
+	}
+
+	// Input might be <1KB
+	readData := buf[0:n]
+	return isTextString(string(readData)), readData, nil
 }
 
 func isTextString(s string) bool {
