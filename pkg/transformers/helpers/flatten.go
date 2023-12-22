@@ -7,7 +7,7 @@ import (
 
 func Flatten(in interface{}) map[string]string {
 	out := make(map[string]string)
-	initial := make([]byte, 0, 64)
+	initial := make([]byte, 0, 64) // We sacrifice some memory but avoid expanding the initial buffer since most keys are not 2-10 runes long
 	flattenRecursive(&initial, in, out)
 	return out
 }
