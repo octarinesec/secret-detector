@@ -21,7 +21,7 @@ func flattenRecursive(prefixAcc *[]byte, in any, out map[string]string) {
 	// Note: if prefixAcc is []byte instead of *[]byte, then the slice header is copied on each call
 	// there is a chance that the byte array might be moved due to a required resize
 	// and then the caller's slice will no longer point to the same array, hence keeping both in memory for some time
-	// Which is why we use a pointer in the recursion and all calls should opearate on the same slice header
+	// Which is why we use a pointer in the recursion and all calls should operate on the same slice header
 	prefix := *prefixAcc
 
 	if in == nil {
@@ -64,23 +64,5 @@ func flattenRecursive(prefixAcc *[]byte, in any, out map[string]string) {
 		out[string(prefix)] = strconv.FormatBool(obj)
 	default:
 		out[string(prefix)] = fmt.Sprint(obj)
-	}
-}
-
-func flattenRecursive2(prefix string, in interface{}, out map[string]string) {
-	switch obj := in.(type) {
-	case map[string]interface{}:
-		if len(prefix) > 0 {
-			prefix += "."
-		}
-		for k, v := range obj {
-			flattenRecursive2(prefix+k, v, out)
-		}
-	case []interface{}:
-		for elemIndex, elem := range obj {
-			flattenRecursive2(fmt.Sprintf("%v[%v]", prefix, elemIndex), elem, out)
-		}
-	default:
-		out[prefix] = fmt.Sprint(obj)
 	}
 }
